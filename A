@@ -1,0 +1,75 @@
+ng new Angular --skip-tests
+npm i bootstrap
+ng g c viewProduct
+ng g c addProduct
+ng g i models/Product
+ng g i models/ProductCategory
+ng g s service/Product
+"node_modules/bootstrap/dist/css/bootstrap.min.css"
+
+first appconfig - provideHttpClient(withFetch())
+appcomponent - [RouterOutlet,RouterLink,CommonModule],
+app route - 
+  {path:'',component:ViewProductComponent},
+  {path:'Index',component:ViewProductComponent},
+  {path:'Add',component:AddProductComponent}
+
+appcpmponent html - <div class="container">
+          <nav class="nav navbar-expand">
+          <ul class="nav navbar">
+          <li class="nav nav-link" routerLink="index">View           Product</li>
+         <li class="nav nav-link" routerLink="Add">Add Product></li>
+        </ul>
+       </nav>
+       </div>
+       <router-outlet />
+
+models- product category - 
+
+import { Product } from "./product";
+
+export interface ProductCategory {
+  productCategoryID: 0,
+    name: '',
+    products: Product[]
+}
+
+ models- product - 
+export interface Product {
+        productID: 0,
+        name: '',
+        productNumber: '',
+        color: '',
+        standardCost: 0,
+        listPrice: 0,
+        size: 0,
+        weight: 0,
+        productCategoryID: 0,
+}
+
+product service- 
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ProductCategory } from '../models/product-category';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductService {
+
+  constructor(private http:HttpClient) { }
+  baseUrl='https://localhost:7115/ProductCategories';
+
+  getProduct():Observable<ProductCategory[]>{
+    return this.http.get<ProductCategory[]>(this.baseUrl);
+  }
+  postProduct(category: ProductCategory):Observable<ProductCategory>{
+    return this.http.post<ProductCategory>(this.baseUrl,category);
+  }
+  deleteProduct(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`); 
+  }
+}
+
+
